@@ -10,6 +10,7 @@
 #include "vw/core/simple_label.h"
 #include "vw/core/vw.h"
 #include "vw/io/io_adapter.h"
+#include "vw/core/parse_example.h"
 
 #include <codecvt>
 #include <locale>
@@ -469,5 +470,25 @@ extern "C"
     const auto& prediction = ex->pred.pdf_value;
     action_and_pdf_value[0] = prediction.action;
     action_and_pdf_value[1] = prediction.pdf_value;
+  }
+
+  VW_DLL_PUBLIC void VW_CALLING_CONV VW_Get_Cats_Action_Pdf_Value(VW_HANDLE handle, VW_EXAMPLE example, float action_and_pdf_value[2]) {
+    auto* vw = static_cast<VW::workspace*>(handle);
+    auto* ex = static_cast<VW::example*>(example);
+    vw->predict(*ex);
+    float action = ex->pred.pdf_value.action;
+    float pdf = ex->pred.pdf_value.pdf_value;
+    action_and_pdf_value[0] = action;
+    action_and_pdf_value[1] = pdf;
+  }
+
+  VW_DLL_PUBLIC VW_EXAMPLE VW_CALLING_CONV VW_Read_Json_Example(VW_HANDLE handle, const char* line) {
+      auto* vw = static_cast<VW::workspace*>(handle);
+      VW::multi_ex examples;
+      examples.push_back(&VW::get_unused_example(vw));
+      vw->example_parser->text_reader(vw, line, strlen(line), examples);
+      example* example = examples[0];
+      VW::setup_example(*vw, example);
+      return static_cast<VW_EXAMPLE>(example);
   }
 }

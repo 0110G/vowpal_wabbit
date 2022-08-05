@@ -137,6 +137,9 @@ extern "C"
   VW_DLL_PUBLIC char* VW_CALLING_CONV VW_GetAuditDataA(VW_HANDLE handle, size_t* size);
   VW_DLL_PUBLIC void VW_CALLING_CONV VW_FreeAuditDataA(VW_HANDLE handle, char* data);
 
+  VW_DLL_PUBLIC void VW_CALLING_CONV VW_Get_Cats_Action_Pdf_Value(VW_HANDLE handle, VW_EXAMPLE example, float action_and_pdf_value[2]);
+  VW_DLL_PUBLIC VW_EXAMPLE VW_CALLING_CONV VW_Read_Json_Example(VW_HANDLE handle, const char* line);
+
 #ifdef __cplusplus
 }
 #endif
